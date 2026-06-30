@@ -7,7 +7,7 @@ Two figures per dataset family:
   - cumulative server FLOPs to reach Acc_t       (log, GFLOPs)
 Each figure: the 4 CIFAR scenarios on the x-axis, 5 methods as grouped bars.
 No title, no legend, no y-axis label (legend is a separate bar image).
-Methods sorted/colored/hatched per the curvevis standard (Ours first, tab10).
+Methods sorted/colored/hatched per the curvevis standard (STCS first, tab10).
 Methods that never reach Acc_t use full-run cumulative + a red dagger.
 
 Acc_t = median of all runs' final accuracies (last --final-window epochs) within
@@ -29,8 +29,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Patch
 
-# curvevis/bl_compare_bar standard: Ours first, then alphabetical
-METHODS_SORTED = ['Ours', 'F3AST', 'FedAWAC', 'FedProx', 'HA']
+# curvevis/bl_compare_bar standard: STCS first, then alphabetical
+METHODS_SORTED = ['STCS', 'F3AST', 'FedAWAC', 'FedProx', 'HA']
 COLORS = plt.get_cmap('tab10').colors
 HATCHES = ['', '///', '...', '\\\\\\']
 NAME_MAP = {'niid': 'Label Skew', 'diri': 'Dirichlet',

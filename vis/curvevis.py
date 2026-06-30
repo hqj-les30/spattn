@@ -52,7 +52,7 @@ def parse_results_from_stdin(sort_by_h=False):
     else:
         def sort_key(item):
             method, _ = item
-            return (0, "") if method == "Ours" else (1, method)
+            return (0, "") if method == "STCS" else (1, method)
 
     combined_sorted = sorted(combined, key=sort_key)
     methods_sorted, paths_sorted = zip(*combined_sorted) if combined_sorted else ([], [])
@@ -451,9 +451,9 @@ def main_plot_script(log_paths: List[Path], legends: List[str], output_dir: Path
 if __name__ == '__main__':
     # Example (illustrative; use the CLI args below instead):
     # log_paths = [
-    #     Path('result/Ours_cifar10_niid_n[100]_c[10]_s[5]_t1000_k[3]/details.jsonl'),
+    #     Path('result/STCS_cifar10_niid_n[100]_c[10]_s[5]_t1000_k[3]/details.jsonl'),
     # ]
-    # legends = ['FLOW']
+    # legends = ['STCS']
     # output_dir = Path('./result/')
     # main_plot_script(log_paths, legends, output_dir, output_prefix='Curve', window_size=6)
     parser = argparse.ArgumentParser()

@@ -33,22 +33,22 @@ echo "Running experiments with T=$t, C=$c, S=$s, Z=$z, I=$i"
 echo "Results will be saved to $outdir"
 
 echo "Start PCA"
-python main.py -t "$t" -c "$c" -s "$s" -z "$z" -g "$g" -i "PCA16" -a Ours -p "${outdir}" \
+python main.py -t "$t" -c "$c" -s "$s" -z "$z" -g "$g" -i "PCA16" -a STCS -p "${outdir}" \
     --feature "PCA" --legend "_PCA16" -F 16\
     >> "$outfile" &
 
 echo "Start RPCA"
-python main.py -t "$t" -c "$c" -s "$s" -z "$z" -g "$g" -i "PCA32" -a Ours -p "${outdir}" \
+python main.py -t "$t" -c "$c" -s "$s" -z "$z" -g "$g" -i "PCA32" -a STCS -p "${outdir}" \
     --feature "PCA" --legend "_PCA32" -F 32\
     >> "$outfile" &
 
 echo "Start TRUNC"
-python main.py -t "$t" -c "$c" -s "$s" -z "$z" -g "$g" -i "PCA64" -a Ours -p "${outdir}" \
+python main.py -t "$t" -c "$c" -s "$s" -z "$z" -g "$g" -i "PCA64" -a STCS -p "${outdir}" \
     --feature "PCA" --legend "_PCA64" -F 64\
     >> "$outfile" &
 
 # echo "Start HA"
-# python main.py -t "$t" -c "$c" -s "$s" -z "$z" -i "$i" -a Ours -p "${outdir}" \
+# python main.py -t "$t" -c "$c" -s "$s" -z "$z" -i "$i" -a STCS -p "${outdir}" \
 #     >> "$outfile" &
 
 # ---- Wait for all jobs ----

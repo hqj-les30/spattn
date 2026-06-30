@@ -29,7 +29,7 @@ def method_sort_key(method, sort_by_h=False):
     if sort_by_h:
         m = H_PATTERN.search(method)
         return int(m.group(1)) if m else 0
-    return (0, '') if method == 'Ours' else (1, method)
+    return (0, '') if method == 'STCS' else (1, method)
 
 
 def load_data(path: str) -> pd.DataFrame:

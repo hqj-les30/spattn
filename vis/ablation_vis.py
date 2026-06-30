@@ -43,17 +43,17 @@ def parse_entry(legend: str):
     """Extract (setting, variant) from a legend string.
 
     The variant is the text inside the *last* parenthesised group, e.g.
-        'Ours Label Skew (Full)'          -> ('Label Skew', 'Full')
-        'Ours Dirichlet (w/o Temporal Agg)' -> ('Dirichlet', 'w/o Temporal Agg')
+        'STCS Label Skew (Full)'          -> ('Label Skew', 'Full')
+        'STCS Dirichlet (w/o Temporal Agg)' -> ('Dirichlet', 'w/o Temporal Agg')
     If no parens are present the variant defaults to 'Full'.
     """
     m = re.search(r'\(([^()]*)\)\s*$', legend)
     if m:
         variant = m.group(1).strip()
-        setting = legend[:m.start()].replace('Ours', '').strip()
+        setting = legend[:m.start()].replace('STCS', '').strip()
     else:
         variant = 'Full'
-        setting = legend.replace('Ours', '').strip()
+        setting = legend.replace('STCS', '').strip()
     return setting or 'Full', variant
 
 

@@ -90,7 +90,7 @@ echo "Results -> $outdir"
 
 # shared base command (word-split intentionally; args contain no spaces)
 # Use combo method: multistep_vec + scalar input (per-class Q)
-base="python main.py -t $t -c $c -s $s -z $z -d $dataset -g $g -a Ours -p ${outdir} --setting $setting -F $F --recall $R --workers-per-gpu $w --enc-input scalar ${seed_flag}"
+base="python main.py -t $t -c $c -s $s -z $z -d $dataset -g $g -a STCS -p ${outdir} --setting $setting -F $F --recall $R --workers-per-gpu $w --enc-input scalar ${seed_flag}"
 
 # run_cond <tag> <variant-label> <qnet> [extra-flags...]
 # Skips conditions already finished (resume-friendly), and caps concurrency at $P.
@@ -122,7 +122,7 @@ run_cond() {
 }
 
 if [ "$setting" = "niid" ]; then
-    # Phase 1: full attribution on the setting where Ours wins most
+    # Phase 1: full attribution on the setting where STCS wins most
     run_cond full "Full"               multistep_vec
     run_cond a1c  "w/o Temporal Agg"   multistep_vec --no-temporal-agg
     run_cond a2c  "w/o Temporal Attn"  multistep_vec --no-temporal-attn

@@ -24,8 +24,8 @@ def parse_methods(stdout_path: str):
             m = pattern.match(line.strip())
             if m:
                 methods.append(m.group(1).strip())
-    # Same sort order as curvevis.py: "Ours" first, then alphabetical
-    methods.sort(key=lambda m: (0, "") if m == "Ours" else (1, m))
+    # Same sort order as curvevis.py: "STCS" first, then alphabetical
+    methods.sort(key=lambda m: (0, "") if m == "STCS" else (1, m))
     return methods
 
 

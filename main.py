@@ -4,7 +4,7 @@ from pathlib import Path
 from utils import set_seed
 
 def run_classification_exp(args):
-    if args.method == 'FLOW' and args.recall == 0:
+    if args.method == 'STCS' and args.recall == 0:
         args.qnet = 'singleT'
         args.recall = 1
     if args.dataset == 'har':
@@ -46,12 +46,12 @@ def main(args):
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser(description="experiment of flowagent")
+    parser = argparse.ArgumentParser(description="STCS experiment")
     
     # Add arguments here:
 
     # experiment settings
-    parser.add_argument('-a', '--method', type=str, default='Ours', help="method name (FLOW is shipped as 'Ours'; 'FLOW' alias accepted)")
+    parser.add_argument('-a', '--method', type=str, default='STCS', help="method name (default 'STCS')")
     parser.add_argument('-d', '--dataset', type=str, default='cifar10', help='dataset to train')
     parser.add_argument('-n', '--n-clients', type=int, default=100, help='client number')
     parser.add_argument('-g', '--gpu-ids', type=str, default='0,1,2,3', help='devices, e.g. "0,1,2"')
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     parser.add_argument('--recall', type=int, default=1, help='hidden dimension of agent network')
     parser.add_argument('--insert', type=int, default=0, help='hidden dimension of agent network')
     parser.add_argument('--metric', type=str, default='f1', help='feature extraction method')
-    parser.add_argument('--beta', type=float, default=0.001, help='regularization coefficient (unused by FLOW; kept for interface compatibility)')
+    parser.add_argument('--beta', type=float, default=0.001, help='regularization coefficient (unused by STCS; kept for interface compatibility)')
 
     # component-level ablation flags (C2)
     parser.add_argument('--no-temporal-agg', action='store_true', help='A1c: disable temporal parameter aggregation (standard FedAvg)')

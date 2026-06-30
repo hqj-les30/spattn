@@ -1,5 +1,5 @@
 """
-Analytical FLOPs / communication-cost utilities for the FLOW framework.
+Analytical FLOPs / communication-cost utilities for the STCS framework.
 
 Conventions
 -----------
@@ -9,7 +9,7 @@ Conventions
 - Communication counts only model-parameter bytes (hyperparameters ignored), uplink only.
 
 Used to populate the ``efficiency`` field of ``details.jsonl`` (see servers/base.py,
-servers/flow.py).
+servers/stcs.py).
 """
 import torch
 import torch.nn as nn

@@ -12,7 +12,7 @@ BLCompare runs (result/) were produced by code whose details.jsonl has
 NO ``efficiency`` field, so every comm/compute quantity here is derived
 ANALYTICALLY from the model architecture + each method's per-round mechanics.
 Formulas reuse ``flops.py`` helpers and replicate
-``servers/flow.py:compute_efficiency_stats`` for the Ours (FLOW) method.
+``servers/stcs.py:compute_efficiency_stats`` for the STCS method.
 
 Conventions (match flops.py / the recorded efficiency field exactly):
 - cnn_macs  = forward MACs of one single-sample client-CNN forward pass.
@@ -26,9 +26,9 @@ Run from the repo root (data lives under result/):
         --result-root result \
         --output-dir result/efficiency_csv
 
-Self-check (validates the Ours formula against a recorded efficiency field):
+Self-check (validates the STCS formula against a recorded efficiency field):
     python vis/efficiency_stats.py --self-check \
-        result/CompAblation_cifar10_niid_50_10_5_clsrand/Ours_*_niid_full/details.jsonl
+        result/CompAblation_cifar10_niid_50_10_5_clsrand/STCS_*_niid_full/details.jsonl
 """
 import argparse
 import csv
@@ -59,8 +59,8 @@ DS_META = {
 }
 CLIENT_BATCH = 256          # client_solver.batch_size  (efficiency client_batch_size)
 LOCAL_EPOCHS = 3            # k[3] in dir names / client_local_epochs
-PROXY_SIZE = 1000           # proxy_data_preparation(size=1000), hardcoded in flow/fedawac/edgeflow
-# Ours (FLOW) agent config — baseline_compare.sh:47 `-F 128 --recall 5`
+PROXY_SIZE = 1000           # proxy_data_preparation(size=1000), hardcoded in stcs.py
+# STCS agent config (paper settings: -F 128 --recall 5)
 FEATURE_DIM = 128
 RECALL = 5
 AGENT_B = 5                 # AgentSolver.b (5 train batches/round)
@@ -72,7 +72,7 @@ BUFFER_SIZE = 640           # AgentSolver.buffer_size
 FEDAWAC_WINDOW = 2
 
 BYTES_F32 = 4
-METHODS = ['Ours', 'FedProx', 'HA', 'FedAWAC', 'F3AST']
+METHODS = ['STCS', 'FedProx', 'HA', 'FedAWAC', 'F3AST']
 CSV_COLUMNS = [
     'group', 'dataset', 'setting', 'sampler', 'seed_dir', 'method', 'method_subdir', 'round',
     'test_accuracy', 'test_loss',
@@ -106,7 +106,7 @@ def ds_constants(dataset):
 
 
 def build_qnet(dataset):
-    """Build the Ours Q-net (multistep) with the BLCompare config."""
+    """Build the STCS Q-net (multistep) with the BLCompare config."""
     meta = DS_META[dataset]
     qnetfn = models.set_qnet_fn('multistep')
     return qnetfn(d_raw_feature=FEATURE_DIM, d_embedding=EMB_DIM, d_attention=ATTN_DIM,
@@ -115,7 +115,7 @@ def build_qnet(dataset):
 
 
 def qnet_forward_macs(qnet, cluster_size, selection_size):
-    """Replicate servers/flow.py:_qnet_forward_macs (batch=1)."""
+    """Replicate servers/stcs.py:_qnet_forward_macs (batch=1)."""
     N, K, F, H = cluster_size, selection_size, FEATURE_DIM, RECALL
     nclasses = qnet.nclasses
     B = 1
@@ -152,7 +152,7 @@ def server_flops(method, d, cnn_macs, qm, cluster_size, selection_size, avg_samp
     C, K, H = cluster_size, selection_size, RECALL
     zero = dict(qnet_forward=0, qnet_train=0, selection=0, aggregation=0,
                 proxy_eval=0, grad_dist=0, qnet_forward_macs_b1=0)
-    if method == 'Ours':
+    if method == 'STCS':
         act = macs_to_flops(qm)
         train = macs_to_flops(5 * AGENT_B * AGENT_BATCH * qm)
         agg = macs_to_flops(d * (K + H + 1))          # temporal aggregation window on
@@ -189,11 +189,11 @@ def comm_bytes(method, d, cluster_size, selection_size):
     """Per-round uplink/downlink bytes."""
     C, K = cluster_size, selection_size
     up_full = uplink_full_bytes(K, d)                  # K × d × 4
-    up_proj = uplink_projected_bytes(C, FEATURE_DIM) if method == 'Ours' else 0   # C × F × 4
+    up_proj = uplink_projected_bytes(C, FEATURE_DIM) if method == 'STCS' else 0   # C × F × 4
     # HA-Edgeflow: each of the C clients uploads only the scalar L2 distance
     # between its local gradient and the proxy gradient (computed locally); the
-    # selected K then upload full params (like Ours). The C scalars are negligible,
-    # so HA uplink ≈ K × d (same as FedAvg/Ours), NOT the (C+K)×d of uploading
+    # selected K then upload full params (like STCS). The C scalars are negligible,
+    # so HA uplink ≈ K × d (same as FedAvg/STCS), NOT the (C+K)×d of uploading
     # full gradients.
     up_extra = (C * BYTES_F32) if method == 'HA' else 0
     up_total = up_full + up_proj + up_extra
@@ -203,8 +203,8 @@ def comm_bytes(method, d, cluster_size, selection_size):
 
 
 def static_memory(method, d, qnet, n_clients):
-    """Server static memory (bytes). Only Ours carries DQN machinery."""
-    if method != 'Ours':
+    """Server static memory (bytes). Only STCS carries DQN machinery."""
+    if method != 'STCS':
         return dict(replay=0, id_emb=0, history=0, qnet_params=0)
     # replay buffer: capacity × per-transition bytes (state tensors; documented estimate).
     # a transition holds: client features (N×F), global feat (F), output dist (n_class),
@@ -250,7 +250,7 @@ def find_method_dirs(group_dir):
             continue
         name = sub.name
         if name.endswith('_combo'):
-            # skip the new-method (combo) Ours runs; this script tracks the
+            # skip the new-method (combo) STCS runs; this script tracks the
             # original-method results. combo is handled separately.
             continue
         det = sub / 'details.jsonl'
@@ -362,7 +362,7 @@ def print_summary(group, result_root, ds_cache, qnet_cache):
 
 
 def self_check(details_path):
-    """Compare analytically-derived Ours constants to a recorded efficiency field."""
+    """Compare analytically-derived STCS constants to a recorded efficiency field."""
     with open(details_path) as f:
         meta = json.loads(f.readline())
     if 'efficiency' not in meta:
@@ -382,8 +382,8 @@ def self_check(details_path):
     avg_samples = dsc['avg_samples'] or (7352 // dsc['n_clients'])
     qnet = build_qnet(dataset)
     qm = qnet_forward_macs(qnet, C, K)
-    # recompute ours server flops exactly as flow.py does
-    sf = server_flops('Ours', d, cnn_macs, qm, C, K, avg_samples)
+    # recompute the STCS server flops exactly as stcs.py does
+    sf = server_flops('STCS', d, cnn_macs, qm, C, K, avg_samples)
 
     up_proj_want = eff.get('uplink_projected_bytes', uplink_projected_bytes(C, FEATURE_DIM))
     checks = [
@@ -419,7 +419,7 @@ def main():
     ap.add_argument('--result-root', default='result')
     ap.add_argument('--output-dir', default='result/efficiency_csv')
     ap.add_argument('--self-check', metavar='DETAILS_JSONL',
-                    help='validate Ours formula against a recorded efficiency field')
+                    help='validate STCS formula against a recorded efficiency field')
     args = ap.parse_args()
 
     if args.self_check:

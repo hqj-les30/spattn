@@ -6,7 +6,7 @@
 #   Label Skew: num_shards = 2, 5
 #
 # Usage:
-#   bash exp/hetero_compare.sh -a Ours -d cifar10 -g 0,1,2 -t 1500 -c 10 -s 5
+#   bash exp/hetero_compare.sh -a STCS -d cifar10 -g 0,1,2 -t 1500 -c 10 -s 5
 
 # ---- Defaults ----
 g="0,1,2,3"

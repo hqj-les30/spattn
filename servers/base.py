@@ -32,9 +32,7 @@ def register_server(name: str):
     return decorator
 
 def set_server(method: str):
-    # FLOW is the only method shipped in this repo (registered as 'Ours'); accept either name.
-    if method.lower() == 'flow':
-        method = 'Ours'
+    # STCS is the only method shipped in this repo.
     cls = _SERVER_REGISTRY.get(method)
     if cls is None:
         raise ValueError(f"Unknown method: {method}. Available: {list(_SERVER_REGISTRY.keys())}")
@@ -231,7 +229,7 @@ class BaseServer(abc.ABC):
         Client FLOPs are computed analytically from the model architecture and each
         client's dataset size (averaged over the client population). Communication
         counts only model-parameter bytes, uplink only: here the aggregation uplink
-        (selected clients uploading full models). FLOW adds the projected-vector
+        (selected clients uploading full models). STCS adds the projected-vector
         selection uplink + server RL FLOPs in its override.
         """
         batch_size = self.client_solver.batch_size

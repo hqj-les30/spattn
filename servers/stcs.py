@@ -6,7 +6,7 @@ from data_wrapper import proxy_data_preparation
 from agent import AgentSolver, Agent, AgentVec, make_agent
 from flops import count_forward_macs, macs_to_flops, uplink_projected_bytes
 
-@register_server('Ours')
+@register_server('STCS')
 class Server(BaseServer):
     def __init__(self, server_solver: ServerSolver):
         super().__init__(server_solver)
@@ -155,7 +155,7 @@ class Server(BaseServer):
             return 0
 
     def compute_efficiency_stats(self):
-        """Extend shared stats with FLOW-specific RL server FLOPs and projected uplink."""
+        """Extend shared stats with STCS-specific RL server FLOPs and projected uplink."""
         stats = super().compute_efficiency_stats()
         feature_dim = self.agent_solver.feature_dim
         recall = self.agent_solver.recall

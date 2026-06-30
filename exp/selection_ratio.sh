@@ -57,15 +57,15 @@ echo "Running selection ratio experiments with T=$t, C=$c, Z=$z, dataset=$d, set
 echo "Results will be saved to $outdir"
 
 echo "Start ratio=20% (s=$s20)"
-python main.py -t "$t" -c "$c" -s "$s20" -z "$z" -d "$d" -g "$g" -a Ours -p "${outdir}" --setting "$S" -F 128 --recall 5 -i "ratio20" --legend "_20%" \
+python main.py -t "$t" -c "$c" -s "$s20" -z "$z" -d "$d" -g "$g" -a STCS -p "${outdir}" --setting "$S" -F 128 --recall 5 -i "ratio20" --legend "_20%" \
     >> "$outfile" &
 
 echo "Start ratio=50% (s=$s50)"
-python main.py -t "$t" -c "$c" -s "$s50" -z "$z" -d "$d" -g "$g" -a Ours -p "${outdir}" --setting "$S" -F 128 --recall 5 -i "ratio50" --legend "_50%" \
+python main.py -t "$t" -c "$c" -s "$s50" -z "$z" -d "$d" -g "$g" -a STCS -p "${outdir}" --setting "$S" -F 128 --recall 5 -i "ratio50" --legend "_50%" \
     >> "$outfile" &
 
 echo "Start ratio=80% (s=$s80)"
-python main.py -t "$t" -c "$c" -s "$s80" -z "$z" -d "$d" -g "$g" -a Ours -p "${outdir}" --setting "$S" -F 128 --recall 5 -i "ratio80" --legend "_80%" \
+python main.py -t "$t" -c "$c" -s "$s80" -z "$z" -d "$d" -g "$g" -a STCS -p "${outdir}" --setting "$S" -F 128 --recall 5 -i "ratio80" --legend "_80%" \
     >> "$outfile" &
 
 # ---- Wait for all jobs ----

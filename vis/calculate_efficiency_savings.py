@@ -8,7 +8,7 @@ from pathlib import Path
 from collections import defaultdict
 import numpy as np
 
-METHODS = ['Ours', 'FedProx', 'HA', 'FedAWAC', 'F3AST']
+METHODS = ['STCS', 'FedProx', 'HA', 'FedAWAC', 'F3AST']
 
 def read_group(csv_path):
     """Read CSV, return {method: {seed_dir: [(round, acc, uplink_total)]}}."""
@@ -94,12 +94,12 @@ def main():
         print(f"\n{setting.upper()} + {sampler.upper()}:")
         print(f"  Target Accuracy: {data['target']:.1f}%")
 
-        ours_up, ours_reached = data['uplink'].get('Ours', (0, False))
+        ours_up, ours_reached = data['uplink'].get('STCS', (0, False))
         ours_gb = ours_up / 1e9
 
         print(f"  Uplink (GB):")
         baseline_ups = []
-        for m in METHODS[1:]:  # Skip Ours
+        for m in METHODS[1:]:  # Skip STCS
             if m in data['uplink']:
                 up, reached = data['uplink'][m]
                 up_gb = up / 1e9
@@ -112,7 +112,7 @@ def main():
             best_name, best_up, best_reached = best_baseline
             savings = (best_up - ours_gb) / best_up * 100
 
-            print(f"\n  Ours: {ours_gb:.2f} GB {'†' if not ours_reached else ''}")
+            print(f"\n  STCS: {ours_gb:.2f} GB {'†' if not ours_reached else ''}")
             print(f"  Best baseline: {best_name} = {best_up:.2f} GB")
             print(f"  Savings vs best baseline: {savings:.1f}%")
 
@@ -133,12 +133,12 @@ def main():
         print(f"\n{setting.upper()} + {sampler.upper()}:")
         print(f"  Target Accuracy: {data['target']:.1f}%")
 
-        ours_up, ours_reached = data['uplink'].get('Ours', (0, False))
+        ours_up, ours_reached = data['uplink'].get('STCS', (0, False))
         ours_gb = ours_up / 1e9
 
         print(f"  Uplink (GB):")
         baseline_ups = []
-        for m in METHODS[1:]:  # Skip Ours
+        for m in METHODS[1:]:  # Skip STCS
             if m in data['uplink']:
                 up, reached = data['uplink'][m]
                 up_gb = up / 1e9
@@ -151,7 +151,7 @@ def main():
             best_name, best_up, best_reached = best_baseline
             savings = (best_up - ours_gb) / best_up * 100
 
-            print(f"\n  Ours: {ours_gb:.2f} GB {'†' if not ours_reached else ''}")
+            print(f"\n  STCS: {ours_gb:.2f} GB {'†' if not ours_reached else ''}")
             print(f"  Best baseline: {best_name} = {best_up:.2f} GB")
             print(f"  Savings vs best baseline: {savings:.1f}%")
 

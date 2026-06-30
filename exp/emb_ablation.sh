@@ -48,23 +48,23 @@ echo "Results will be saved to $outdir"
 
 # ---- Dirichlet setting ----
 echo "Start Dirichlet + multistep (with id_emb)"
-python main.py -t "$t" -c "$c" -s "$s" -z "$z" -d "$dataset" -g "$g" -a Ours -p "${outdir}" \
+python main.py -t "$t" -c "$c" -s "$s" -z "$z" -d "$dataset" -g "$g" -a STCS -p "${outdir}" \
     --setting diri -q multistep -F 128 --recall 5 -i "diri_emb" --legend " Dirichlet" \
     >> "$outfile" &
 
 echo "Start Dirichlet + noemb (without id_emb)"
-python main.py -t "$t" -c "$c" -s "$s" -z "$z" -d "$dataset" -g "$g" -a Ours -p "${outdir}" \
+python main.py -t "$t" -c "$c" -s "$s" -z "$z" -d "$dataset" -g "$g" -a STCS -p "${outdir}" \
     --setting diri -q noemb -F 128 --recall 5 -i "diri_noemb" --legend " Dirichlet (w/o id_emb)" \
     >> "$outfile" &
 
 # ---- Label Skew (niid) setting ----
 echo "Start Label Skew + multistep (with id_emb)"
-python main.py -t "$t" -c "$c" -s "$s" -z "$z" -d "$dataset" -g "$g" -a Ours -p "${outdir}" \
+python main.py -t "$t" -c "$c" -s "$s" -z "$z" -d "$dataset" -g "$g" -a STCS -p "${outdir}" \
     --setting niid -q multistep -F 128 --recall 5 -i "niid_emb" --legend " Label Skew" \
     >> "$outfile" &
 
 echo "Start Label Skew + noemb (without id_emb)"
-python main.py -t "$t" -c "$c" -s "$s" -z "$z" -d "$dataset" -g "$g" -a Ours -p "${outdir}" \
+python main.py -t "$t" -c "$c" -s "$s" -z "$z" -d "$dataset" -g "$g" -a STCS -p "${outdir}" \
     --setting niid -q noemb -F 128 --recall 5 -i "niid_noemb" --legend " Label Skew (w/o id_emb)" \
     >> "$outfile" &
 

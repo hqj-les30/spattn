@@ -16,12 +16,7 @@ from utils import diff_state_dict
 def set_client(
     method: str      
 ):
-    if method == 'FLOW':
-        return Client
-    else:
-        return Client
-    # if method == 'IFCA':
-    #     return IFCAClient
+    return Client
 
 
 @dataclass

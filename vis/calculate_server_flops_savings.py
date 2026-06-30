@@ -7,7 +7,7 @@ from pathlib import Path
 from collections import defaultdict
 import numpy as np
 
-METHODS = ['Ours', 'FedProx', 'HA', 'FedAWAC', 'F3AST']
+METHODS = ['STCS', 'FedProx', 'HA', 'FedAWAC', 'F3AST']
 
 def read_group(csv_path):
     """Read CSV, return {method: {seed_dir: [(round, acc, server_flops)]}}."""
@@ -76,7 +76,7 @@ def main():
 
                 runs = read_group(csvf)
 
-                ours_sf, ours_reached = cumulative_to_target(runs, 'Ours', target)
+                ours_sf, ours_reached = cumulative_to_target(runs, 'STCS', target)
                 fedawac_sf, fedawac_reached = cumulative_to_target(runs, 'FedAWAC', target)
                 ha_sf, ha_reached = cumulative_to_target(runs, 'HA', target)
 
@@ -85,7 +85,7 @@ def main():
                 ha_gf = ha_sf / 1e9
 
                 print(f"    {sampler.upper():6s}:")
-                print(f"      Ours:       {ours_gf:.2f} GFLOPs {'†' if not ours_reached else ''}")
+                print(f"      STCS:       {ours_gf:.2f} GFLOPs {'†' if not ours_reached else ''}")
                 print(f"      FedAWAC:    {fedawac_gf:.2f} GFLOPs {'†' if not fedawac_reached else ''}")
                 print(f"      HA:         {ha_gf:.2f} GFLOPs {'†' if not ha_reached else ''}")
 
