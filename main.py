@@ -19,14 +19,6 @@ def run_classification_exp(args):
     )
     server.run()
 
-def result_process(title, legend):
-    from vis.curvevis import main_plot_script
-    main_plot_script(
-        log_paths=[title / 'details.jsonl'],
-        legends=[legend],
-        output_dir=title,
-    )
-
 def main(args):
     title = f"{args.method}_{args.dataset}_{args.setting}_n[{args.n_clients}]_c[{args.cluster_size}]_s[{args.selection_size}]_t{args.total_epochs}_k[{args.local_epochs}]"
     # if args.warm_up > 0:
@@ -40,8 +32,6 @@ def main(args):
     set_seed(args.seed)
     run_classification_exp(args)
     print(f"{args.method}{args.legend}: saved results to {args.path.absolute() / 'details.jsonl'}")
-    if not args.skip_result_process:
-        result_process(args.path, args.method)
 
 
 if __name__ == '__main__':
@@ -99,11 +89,7 @@ if __name__ == '__main__':
     parser.add_argument('--reward-smooth', type=float, default=0.05, help='EMA factor for the progress baseline (smaller=slower)')
     parser.add_argument('--balance-select', type=str, default='mean', choices=['mean', 'maxmin'],
                         help='per-class Q scalarization for selection (mean=average over classes [default]; maxmin=favor worst-class)')
-    # result process
-    parser.add_argument('--skip-result-process', action='store_true', help='skip process results')
-    parser.add_argument('--legend', type=str, default='', help='Legend for comparesion methods')
+    parser.add_argument('--legend', type=str, default='', help='Legend for comparison methods')
     args = parser.parse_args()
-    if args.dataset == 'shake':
-        args.dataset = 'shakespeare'
 
     main(args)

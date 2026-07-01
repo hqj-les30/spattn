@@ -100,24 +100,6 @@ def dirichlet_data_preparation(
     dev_dataset = config.dev_cls()
     datashape = config.data_shape
 
-    if dataset == 'shakespeare':
-        n_class = data_func.n_class
-        all_indices = np.arange(len(data_func.targets))
-        ds_all = data_func(all_indices)
-        dirichlet_clients = sp.get_dirichlet_noniid(ds_all, n_clients, alpha)
-
-        client_datasets = []
-        client_datasets_indexes = {}
-        for k, v in dirichlet_clients.items():
-            client_datasets.append(data_func(v))
-            client_datasets_indexes[k] = v.tolist()
-
-        return client_datasets, None, dev_dataset, {
-            'num_classes': n_class,
-            'data_shape': datashape,
-            'client_datasets_indexes': client_datasets_indexes
-        }
-
     n_class = config.n_class
     indices_per_class = np.load(path_to_data / (dataset + '_indices.npy'))
     size_per_class = indices_per_class.shape[1]
@@ -147,8 +129,8 @@ def proxy_data_preparation(
     config = get_dataset_config(dataset)
     data_func = config.local_cls
 
-    if dataset in ('har', 'shakespeare'):
-        total_data = len(data_func.targets) if dataset == 'shakespeare' else len(data_func.data)
+    if dataset == 'har':
+        total_data = len(data_func.data)
         idx = np.random.choice(total_data, size)
     else:
         indices = np.load(path_to_data / (dataset + '_indices.npy'))

@@ -134,19 +134,6 @@ class UCIHARNet(nn.Module):
     def forward(self, x):
         return self.net(x)
 
-class LSTM_shakespeare(nn.Module):
-    def __init__(self, n_class=65):
-        super().__init__()
-        self.embedding = nn.Embedding(num_embeddings=n_class, embedding_dim=8)
-        self.lstm = nn.LSTM(input_size=8, hidden_size=256, num_layers=2,
-                            batch_first=True)
-        self.fc = nn.Linear(256, n_class)
-
-    def forward(self, x):
-        emb = self.embedding(x)
-        output, _ = self.lstm(emb)
-        return self.fc(output[:, -1, :])
-
 def set_model_fn(name='cifar10'):
     if name == 'cifar10':
         return CNN_cifar
@@ -154,8 +141,6 @@ def set_model_fn(name='cifar10'):
         return CNN_fmnist
     elif name == 'har':
         return UCIHARNet
-    elif name == 'shakespeare':
-        return LSTM_shakespeare
 
 # ============================================
 # Regular Deep Q-Network
